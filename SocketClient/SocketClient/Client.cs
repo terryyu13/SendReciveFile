@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
@@ -5,20 +6,25 @@ using System.Globalization;
 
 namespace SocketClient
 {
+    // SocketClient類別，用於與伺服器通訊
     public partial class SocketClient : Form
     {
+        // 定義執行緒變數fetchFile和TcpClient變數tcpClient
         Thread? fetchFile;
         TcpClient? tcpClient = null;
 
+        // SocketClient類別的建構函式
         public SocketClient()
         {
             InitializeComponent();
         }
 
+        // Start按鈕的點擊事件處理函式
         public void Start_Click(object sender, EventArgs e)
         {
             try
             {
+                // 創建新的執行緒來執行fetch_file函式
                 fetchFile = new Thread(fetch_file);
                 fetchFile.Start();
             }
@@ -27,6 +33,7 @@ namespace SocketClient
             }
         }
 
+        // 建立IPEndPoint物件的函式
         public IPEndPoint CreateIPEndPoint(string IP, string Port)
         {
             IPAddress? ip;
@@ -42,11 +49,14 @@ namespace SocketClient
             return new IPEndPoint(ip, port);
         }
 
+        // 擷取檔案的函式
         public void fetch_file()
         {
             try
             {
+                // 解析IP和Port，建立IPEndPoint物件
                 IPEndPoint ipEnd = CreateIPEndPoint(IP.Text, port.Text);
+                // 創建新的TcpClient物件並嘗試與伺服器連接
                 tcpClient = new TcpClient();
                 if (tcpClient.ConnectAsync(ipEnd).Wait(1000))
                 {
@@ -110,6 +120,8 @@ namespace SocketClient
                     tcpClient.Close();
             }
         }
+        
+        // 覆寫WndProc函式，以處理窗口訊息
         protected override void WndProc(ref Message m)
         {
             const int WM_SYSCOMMAND = 0x0112;
