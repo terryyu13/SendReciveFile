@@ -2,11 +2,13 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-
+// SocketServer類別，用於建立TCP伺服器
 namespace SocketServer
 {
+    // SocketServer類別，繼承自Windows Forms的Form類別
     public partial class SocketServer : System.Windows.Forms.Form
     {
+        // 定義TcpListener物件server和執行緒物件serverThread，以及執行緒運行狀態標誌executing
         TcpListener? server = null;
         Thread? serverThread;
         bool executing = true;
@@ -14,11 +16,13 @@ namespace SocketServer
         const int bufferSize = 1024;
         const int commandSize = 5;
 
+        // SocketServer類別的建構函式
         public SocketServer()
         {
             InitializeComponent();
         }
         
+        // 建立TCP伺服器的函式
         public bool ServerSocketCreate(int port)
         {
             try
@@ -35,6 +39,7 @@ namespace SocketServer
             }
         }
 
+        // 啟動伺服器的函式
         public void ServerStart()
         {
             try
@@ -105,6 +110,7 @@ namespace SocketServer
             }
         }
 
+        // 覆寫WndProc函式，以處理窗口訊息
         protected override void WndProc(ref Message m)
         {
             const int WM_SYSCOMMAND = 0x0112;
@@ -118,6 +124,7 @@ namespace SocketServer
             base.WndProc(ref m);
         }
 
+        // Form載入事件處理函式，開始執行伺服器
         private void Form_Load(object sender, EventArgs e)
         {
             serverThread = new Thread(new ThreadStart(this.ServerStart));
